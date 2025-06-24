@@ -9,13 +9,33 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const fileRoute = require("./routes/fileroutes");
 const chartDataRoute = require("./routes/chartData");
-
-
-
+const User = require("./models/User");
+const authMiddleware = require("./utils/authMiddleware");
+const dns = require('dns');
 app.use(bodyParser.json());
 app.use(cors());
 
 createAdminAccount();
+
+app.get('/me', authMiddleware.authenticateToken, async (req, res) => {
+    try {
+      const user = await User.findById(req.userId).select('-password');
+      if (!user) return res.status(404).json({ error: 'User not found' });
+      res.json(user);
+    } catch (err) {
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+
+dns.lookup('localhost', (err) => {
+  if (err && err.code === "ENOTFOUND") {
+    console.log("❌ No internet connection");
+    process.exit(1);
+  } else {
+    console.log("✅ Internet is connected");
+  }
+});
+
 
 app.use("/user", signupRoute);
 app.use("/auth", loginRoute);
