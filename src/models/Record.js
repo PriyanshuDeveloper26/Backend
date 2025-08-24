@@ -13,10 +13,18 @@ const RecordSchema = new mongoose.Schema({
     type: Number, // in bytes
     required: true,
   },
+  // user: {
+  //   type: mongoose.Schema.Types.ObjectId, // Optional
+  //   ref: "User",
+  // },
   uploadDate: {
     type: Date,
     default: Date.now,
   },
+  // uploadedBy: {
+  //   ref: "User",
+  //   type: mongoose.Schema.Types.ObjectId,
+  // }
 });
 
 module.exports = mongoose.model("Record", RecordSchema);

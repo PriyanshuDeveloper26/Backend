@@ -6,7 +6,7 @@ async function login(req, res) {
     const { token } = await authService.login(name, password);
     res.json({ name: name, token: token });
   } catch (error) {
-    alert("invalid name or password");
+    console.error("Login error:", error);
     res.status(401).json({ message: "Invalid name or password" });
   }
 }
